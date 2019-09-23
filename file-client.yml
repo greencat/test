@@ -1,15 +1,25 @@
-      
-logging:
-  level:
-    ROOT: info
-    org.springframework:
-      web: trace
-    com.bl.sigems.carnetsante:
-      professionnels.sante: trace
-   
+vets:
+  cache:
+    ttl: 60
+    heap-size: 100
 
-    
- #${spring.application.name}:${vcap.application.instance_id:${spring.application.instance_id:${random.value}}}
- 
- # ${spring.cloud.client.hostname}:${spring.application.name}:${spring.application.instance_id:${server.port}}}
+---
+spring:
+  profiles: default
+eureka:
+  instance:
+    # enable to register multiple app instances with a random server port
+    instance-id: ${spring.application.name}:${random.uuid}
+
+---
+spring:
+  profiles: docker
+  zipkin:
+    baseUrl: http://tracing-server:9411
+server:
+  port: 8083
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://discovery-server:8761/eureka/
 
